@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# This script displays the content of the file /etc/passwd, using the while loop + IFS
+awk '{count[$1 " " $9]++} END {for (key in count) print count[key], key}' apache-access.log | sort -nr
