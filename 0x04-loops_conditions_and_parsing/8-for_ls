@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This script is displaying "Best School" 10 times
+# This script displays content of the current directory
 for line in *
 do
 	echo "$line" | cut -d'-' -f2

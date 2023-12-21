@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This script is displaying "Best School" 10 times
+# This script displays numbers from 1 to 100
 for i in $(seq 100)
 do
 	if (( i % 15 == 0 )); then
