@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# This script displays To infinity and beyond indefinitely
+# shellcheck disable=SC2009
+kill -9 $(pgrep -f 7-highlander)
