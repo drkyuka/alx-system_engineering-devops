@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # This script displays Best School 10 times, but for the 9th iteration, displays Best School
 x=1;
-while [ $x -le 10 ]
-do
+while [ $x -le 10 ]; do
 	if [ $x -eq 9 ]; then echo "Hi";
 	else echo "Best School"; fi; ((x++))
 done
