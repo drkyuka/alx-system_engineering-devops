@@ -3,7 +3,11 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-
+/**
+ * infinite_while - function sleeps for one second and repeats indefinitely
+ *
+ * Return: int
+ */
 int infinite_while(void)
 {
 	while (1)
@@ -13,7 +17,11 @@ int infinite_while(void)
 	return (0);
 }
 
-
+/**
+ * main - function runs the main function
+ *
+ * Return: int
+ */
 int main(void)
 {
 	int i;
