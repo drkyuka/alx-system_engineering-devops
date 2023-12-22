@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# This script displays To infinity and beyond indefinitely
+# shellcheck disable=SC2009
+filename=/var/run/my_process.pid
+
+start(){
+	./manage_my_process & echo "$!" > "$filename"
+}
+stop(){
+	if [ -f "$filename" ]; then pkill -SIGKILL -F "$filename" && rm "$filename"; fi
+}
+
+case $1 in
+	"start")
+		start && echo "manage_my_process started";;
+	"stop")
+		stop && echo "manage_my_process stopped";;
+	"restart")
+		stop &&	start && echo "manage_my_process restarted";;
+	*)
+		echo "Usage: manage_my_process {start|stop|restart}"
+esac
