@@ -1,0 +1,21 @@
+# This is the ssh client system-wide configuration file.  See
+# ssh_config(5) for more information.  This file provides defaults for
+# users, and the values can be changed in per-user configuration files
+# or on the command line.
+
+Host *
+    IdentityFile ~/.ssh/school
+	PasswordAuthentication No
+	Ciphers aes128-ctr
+	Protocol 2
+    # HostName 278946-web-01
+    # User ubuntu
+	# PubkeyAuthentication yes
+	# EnableSSHKeysign yes
+	# VisualHostKey yes
+	# StrictHostKeyChecking yes
+	# LogLevel DEBUG1
+
+# Host hostname_1
+#    PARAMETER argument
+#    PARAMETER argument
