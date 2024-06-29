@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# script that uses ssh to connect to your server
+# using the private key ~/.ssh/school
+# with the user ubuntu.
 
 # ssh-keygen -t rsa -f ~/.ssh/school -N ''
 # ssh-copy-id -i ~/.ssh/school.pub  ubuntu@278946-web-01
