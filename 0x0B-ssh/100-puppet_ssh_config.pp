@@ -1,27 +1,27 @@
 # Using Puppet to make changes to our configuration file
 
-exec {'delete_old_files':
-  provider => 'shell',
-  command  => '
-    echo "Attempting to delete old files..." &&
-    rm -vf /home/drking/.ssh/school* &&
-    echo "Deleting successful"
-  ',
-  onlyif   => 'test -f /home/drking/.ssh/school',
-  path     => ['/bin', '/usr/bin']
-}
+# exec {'delete_old_files':
+#   provider => 'shell',
+#   command  => '
+#     echo "Attempting to delete old files..." &&
+#     rm -vf /home/ubuntu/.ssh/school* &&
+#     echo "Deleting successful"
+#   ',
+#   onlyif   => 'test -f /home/ubuntu/.ssh/school',
+#   path     => ['/bin', '/usr/bin']
+# }
 
-exec {'generate_ssh_key':
-  provider => 'shell',
-  command  => '
-    echo "Attempting to create new keys" &&
-    ssh-keygen -t rsa -f /home/drking/.ssh/school -N "" &&
-    echo "Creating new keys successful"
-  ',
-  path     => ['/bin', '/usr/bin']
-}
+# exec {'generate_ssh_key':
+#   provider => 'shell',
+#   command  => '
+#     echo "Attempting to create new keys" &&
+#     ssh-keygen -t rsa -f /home/ubuntu/.ssh/school -N "" &&
+#     echo "Creating new keys successful"
+#   ',
+#   path     => ['/bin', '/usr/bin']
+# }
 
-file {'/home/drking/.ssh/config':
+file {'/home/ubuntu/.ssh/config':
   ensure  => file,
   content => "
     Host *
