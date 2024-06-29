@@ -4,7 +4,8 @@
 # localhost resolves to 127.0.0.2
 # facebook.com resolves to 8.8.8.8
 
-cp /etc/hosts ~/hosts.backup
-sed -i 's/localhost/127.0.0.1      localhost/' ~/hosts.backup
-sed -i 's/facebook*/8.8.8.8      facebook.com/' ~/hosts.backup
-cp -f ~/hosts.backup /etc/hosts
+backup_file="/etc/hosts.backup"
+cp /etc/hosts $backup_file
+sed -i 's/localhost/127.0.0.1      localhost/' $backup_file
+sed -i 's/facebook*/8.8.8.8      facebook.com/' $backup_file
+cp -f $backup_file /etc/hosts
