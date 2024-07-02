@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Bash script that Install nginx on your web-01
+
+# sudo su
+apt update && apt install -y nginx
+service nginx stop
+echo "Hello World!" > /var/www/html/index.html
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+redirect_string="
+sed -i "/^\s*location \/ {/a\\
+    location /redirect_me {\\
+        return 301 "https://www.youtube.com/watch?v=QH2-TGUlwu4";\\
+    }" /etc/nginx/sites-available/default
+service nginx restart
