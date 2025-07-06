@@ -3,7 +3,12 @@
 
 # sudo su
 sudo apt update && sudo apt install -y nginx
-sudo service nginx stop
+# sudo service nginx stop
+sudo ufw allow 22/tcp
+sudo ufw allow 80/tcp
+sudo ufw --force enable
+# Backup the original index page before overwriting
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bak
 echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html > /dev/null
-# cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 sudo service nginx restart
