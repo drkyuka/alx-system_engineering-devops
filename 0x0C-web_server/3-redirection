@@ -9,6 +9,10 @@ apt-get install -y nginx --fix-missing
 apt-get install -y ufw
 apt-get autoremove -y && apt-get autoclean -y
 
+ufw allow 22/tcp
+ufw allow 80/tcp
+ufw --force enable
+
 cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bak
 
@@ -23,5 +27,5 @@ tee /etc/nginx/snippets/redirect_me.conf > /dev/null <<EOF
 EOF
 
 sed -i '/^\s*server\s*{/r /etc/nginx/snippets/redirect_me.conf' /etc/nginx/sites-available/default
-echo "<html><head></head><body>Hello World!</body></html>" | tee /var/www/html/index.nginx-debian.html > /dev/null
+echo "<html><head></head><body>Hello World!</body></html>" > /var/www/html/index.nginx-debian.html
 service nginx restart

@@ -19,5 +19,5 @@ cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.b
 chown -vR "$USER":"$USER" /var/www/
 chown -vR "$USER":"$USER" /etc/nginx
 
-echo "<html><head></head><body>Hello World!</body></html>" | tee /var/www/html/index.nginx-debian.html > /dev/null
+echo "<html><head></head><body>Hello World!</body></html>" > /var/www/html/index.nginx-debian.html
 service nginx restart
