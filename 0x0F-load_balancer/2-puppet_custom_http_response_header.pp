@@ -68,10 +68,11 @@ class nginx_custom_header {
 
   # modify nginx to serve custom HTTP response header
   exec { 'append_custom_header':
-    $header_conf="\n\tadd_header X-Served-By $(hostname);\n"
-    command => "sed -i \"/server_name _;/i\\$header_conf\" $default_site",
-    path    => '/usr/bin:/bin',
+    command => "sed -i \"/server_name _;/i\\\\n\\tadd_header X-Served-By $(hostname);\\n\" ${default_site}",
+    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
+    unless  => "grep -q 'add_header X-Served-By' ${default_site}",
     require => Package['nginx'],
+    notify  => Service['nginx'],
   }
 
   # set permissions for the base directory
