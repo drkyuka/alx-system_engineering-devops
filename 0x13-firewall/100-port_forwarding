@@ -12,7 +12,7 @@
 *nat
 :PREROUTING ACCEPT [0:0]
 :POSTROUTING ACCEPT [0:0]
--A PREROUTING -p tcp --dport 8080 -j DNAT --to-destination web-01.holberton.online:80
+-A PREROUTING -p tcp --dport 8080 -j DNAT --to-destination web-01:80
 -A POSTROUTING -j MASQUERADE
 COMMIT
 
