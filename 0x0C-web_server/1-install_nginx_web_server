@@ -20,4 +20,4 @@ chown -vR "$USER":"$USER" /var/www/
 chown -vR "$USER":"$USER" /etc/nginx
 
 echo "<html><head></head><body>Hello World!</body></html>" > /var/www/html/index.nginx-debian.html
-service nginx restart
+nginx -t && service nginx restart

@@ -28,4 +28,32 @@ EOF
 
 sed -i '/^\s*server\s*{/r /etc/nginx/snippets/redirect_me.conf' /etc/nginx/sites-available/default
 echo "<html><head></head><body>Hello World!</body></html>" > /var/www/html/index.nginx-debian.html
+
+# create customer 404 page
+tee /usr/share/nginx/html/custom_404.html > /dev/null <<EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>404 Not Found</title>
+</head>
+<body>
+    <h1>404 Not Found</h1>
+    <p>The page you are looking for does not exist.</p>
+    <p> Ceci n'est pas une page</p>
+</body>
+</html>
+
+EOF
+
+
+tee /etc/nginx/snippets/custom404.conf > /dev/null <<EOF
+    error_page 404 /custom_404.html;
+        location = /custom_404.html {
+                root /usr/share/nginx/html;
+                internal;
+        }
+EOF
+
+sed -i '/^\s*server\s*{/r /etc/nginx/snippets/custom404.conf' /etc/nginx/sites-available/default
 nginx -t && service nginx restart
