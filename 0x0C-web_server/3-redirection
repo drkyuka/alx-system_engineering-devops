@@ -24,7 +24,7 @@ tee /etc/nginx/snippets/redirect_me.conf > /dev/null <<EOF
 EOF
 
 sed -i '/^\s*server\s*{/r /etc/nginx/snippets/redirect_me.conf' /etc/nginx/sites-available/default
-echo "<html><head></head><body>Hello World!</body></html>" > /var/www/html/index.nginx-debian.html
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
 
 chown -vR "$USER":"$USER" /var/www/
 chown -vR "$USER":"$USER" /etc/nginx

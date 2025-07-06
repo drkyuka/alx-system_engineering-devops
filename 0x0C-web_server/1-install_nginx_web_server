@@ -16,7 +16,7 @@ ufw --force enable
 cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bak
 
-echo "<html><head></head><body>Hello World!</body></html>" > /var/www/html/index.nginx-debian.html
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
 
 
 chown -vR "$USER":"$USER" /var/www/
