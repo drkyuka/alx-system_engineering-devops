@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Install and configure HAproxy on your lb-01 server.
+
+sudo su
+
+# Clean up old HAproxy installation and install a fresh version
+service haproxy status && service haproxy stop
+apt-get purge -y haproxy
+apt-get update && apt-get upgrade -y
+apt-get install -y haproxy --fix-missing
+apt-get autoremove -y && apt-get autoclean -y
+
+make a backup of the original HAproxy configuration file
+cp -v /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
+
+# Create a new HAproxy configuration file
+cat << EOF >> /etc/haproxy/haproxy.cfg
+# This is the main configuration file for HAproxy.
+frontend  web
+        bind *:80
+        mode http
+        default_backend web_servers
+backend web_servers
+        balance roundrobin
+        server 541704-web-01 3.82.245.165:80 check
+        server 541704-web-02 100.24.31.214:80 check
+EOF
+
+create a backup of the original HAproxy default file
+cp -v /etc/default/haproxy /etc/default/haproxy.bak
+echo "ENABLED=1" >> /etc/default/haproxy
+
+# Test if the HAproxy configuration is valid and reload it
+if haproxy -c -f /etc/haproxy/haproxy.cfg; then
+    service haproxy reload && service haproxy restart
+    echo "HAproxy installed and configured successfully."
+else
+    echo "HAproxy configuration is invalid. Please check the configuration file."
+fi
