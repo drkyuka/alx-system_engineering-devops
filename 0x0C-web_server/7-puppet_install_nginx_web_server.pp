@@ -9,6 +9,11 @@ package { 'nginx':
   require => Exec['update all packages'],
 }
 
+package {'ufw':
+    ensure => installed,
+    require => Exec['update all packages'],
+}
+
 service { 'nginx':
   ensure  => running,
   enable  => true,
