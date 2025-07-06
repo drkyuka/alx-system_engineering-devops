@@ -3,7 +3,7 @@
 
 sudo su
 # sudo service nginx stop
-service nginx stop 
+service nginx stop
 apt-get update && apt-get upgrade
 apt-get install -y nginx --fix-missing
 apt-get install -y ufw
@@ -19,7 +19,7 @@ cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.b
 sed -i 's/listen\s*80;/listen 80 default_server;/g' /etc/nginx/sites-available/default
 sed -i 's/listen\s*\[::\]:80;/listen [::]:80 default_server;/g' /etc/nginx/sites-available/default
 
-echo "Hello World!" > /var/www/html/index.nginx-debian.html
+echo "Hello World!" >/var/www/html/index.nginx-debian.html
 
 nginx -t && nginx -s reload
 service nginx restart
