@@ -16,9 +16,6 @@ ufw --force enable
 cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bak
 
-chown -vR "$USER":"$USER" /var/www/
-chown -vR "$USER":"$USER" /etc/nginx
-
 tee /etc/nginx/snippets/redirect_me.conf > /dev/null <<EOF
     location /redirect_me {
         return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
@@ -56,4 +53,10 @@ tee /etc/nginx/snippets/custom404.conf > /dev/null <<EOF
 EOF
 
 sed -i '/^\s*server\s*{/r /etc/nginx/snippets/custom404.conf' /etc/nginx/sites-available/default
-nginx -t && service nginx restart
+
+
+chown -vR "$USER":"$USER" /var/www/
+chown -vR "$USER":"$USER" /etc/nginx
+
+nginx -t && nginx -s reload
+service nginx restart
