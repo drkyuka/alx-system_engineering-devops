@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+sudo su
+apt-get update && apt-get upgrade -y
+apt-get install -y ufw --fix-missing
+apt-get autoremove -y && apt-get autoclean -y
+
 ufw --force reset
 ufw default deny incoming
 ufw default allow outgoing
