@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
-sudo apt-get update && apt-get upgrade -y
-sudo apt-get install -y ufw --fix-missing
-sudo apt-get autoremove -y && sudo apt-get autoclean -y
-
 sudo ufw --force reset
+sudo ufw status
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
-sudo ufw allow 22/tcp
-sudo ufw allow 80/tcp
-sudo ufw allow 443/tcp
+sudo ufw allow 22
+sudo ufw allow 80
+sudo ufw allow 443
 sudo ufw --force enable && echo "Firewall is active and enabled on system startup"
