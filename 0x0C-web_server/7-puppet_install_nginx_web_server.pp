@@ -9,20 +9,9 @@ package { 'nginx':
   require => Exec['update all packages'],
 }
 
-package {'ufw':
-    ensure => installed,
-    require => Exec['update all packages'],
-}
-
 service { 'nginx':
   ensure  => running,
   enable  => true,
-  require => Package['nginx'],
-}
-
-file {'/var/www/html/index.html':
-  ensure  => file,
-  content => 'Hello World!',
   require => Package['nginx'],
 }
 
@@ -44,4 +33,10 @@ exec {'insert_nginx_redirect_snippet':
     Package['nginx']
     ],
   notify => Service['nginx'], 
+}
+
+file {'/var/www/html/index.html':
+  ensure  => file,
+  content => 'Hello World!',
+  require => Package['nginx'],
 }
