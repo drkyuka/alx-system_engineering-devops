@@ -4,6 +4,6 @@
 # sudo su
 apt update && apt install -y nginx
 service nginx stop
-echo "Hello World!" > /var/www/html/index.html
+echo "Hello World!" > /var/www/html/index.nginx-debian.html
 # cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 service nginx restart
