@@ -30,27 +30,16 @@ exec {'insert_default_server_listen':
   command => 'sed -i "s/listen[[:space:]]*80[[:space:]]*;[[:space:]]*$/listen 80 default_server;/" /etc/nginx/sites-available/default',
 }
 
-# exec { 'insert_redirect_config':
-#   command => '/bin/sed -i "/^\s*server\s*{/r /etc/nginx/snippets/redirect_me.conf" /etc/nginx/sites-available/default',
-#   unless  => '/bin/grep -q "location /redirect_me" /etc/nginx/sites-available/default',
-#   require => [
-#     Package['nginx'],
-#     File['/etc/nginx/snippets/redirect_me.conf']
-#   ],
-#   notify  => Service['nginx'],
-# }
-
-
-file_line { 'include redirect_me snippet':
-  path    => '/etc/nginx/sites-available/default',
-  line    => '    include snippets/redirect_me.conf;',
-  after   => 'server_name _;',
+exec { 'insert_redirect_config':
+  command => '/bin/sed -i "/^\s*server\s*{/r /etc/nginx/snippets/redirect_me.conf" /etc/nginx/sites-available/default',
+  unless  => '/bin/grep -q "location /redirect_me" /etc/nginx/sites-available/default',
   require => [
     Package['nginx'],
     File['/etc/nginx/snippets/redirect_me.conf']
   ],
-  notify  => Service['nginx'], 
+  notify  => Service['nginx'],
 }
+
 
 service { 'nginx':
   ensure => running,
