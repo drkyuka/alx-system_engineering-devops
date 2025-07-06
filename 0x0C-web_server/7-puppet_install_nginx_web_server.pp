@@ -1,7 +1,7 @@
 # puppet script 
 
 exec {'update all packages':
-  command => 'apt-get update && apt-get upgrade -y',
+  command => 'apt-get update',
 }
 
 package { 'nginx':
@@ -17,31 +17,31 @@ file {'/var/www/html/index.html':
 
 file {'/etc/nginx/snippets/redirect_me.conf':
   ensure  => file,
-  content => @("EOF")
-        location /redirect_me {
-            return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4/;
-        }
-
-    | EOF
-  require => Package['nginx'],
+    content => @("EOF")
+          location /redirect_me {
+              return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4/;
+          }
+  | EOF
+    require => Package['nginx'],
 }
 
 exec {'insert_default_server_listen':
   command => 'sed -i "s/listen\\s*80;/listen 80 default_server;/g" /etc/nginx/sites-available/default',
-  require => Package['nginx'],
+  command => 'sed -i "s/listen[[:space:]]*80[[:space:]]*;[[:space:]]*$/listen 80 default_server;/" /etc/nginx/sites-available/default',
 }
 
-exec {'insert_nginx_redirect_snippet':
-  command => '/bin/sed -i "/^\\s*server\\s*{/r /etc/nginx/snippets/redirect_me.conf" /etc/nginx/sites-available/default',
+exec { 'insert_redirect_config':
+  command => '/bin/sed -i "/^\s*server\s*{/r /etc/nginx/snippets/redirect_me.conf" /etc/nginx/sites-available/default',
+  unless  => '/bin/grep -q "location /redirect_me" /etc/nginx/sites-available/default',
   require => [
-    File['/etc/nginx/snippets/redirect_me.conf'],
-    Package['nginx']
-    ],
-  notify => Service['nginx'], 
+    Package['nginx'],
+    File['/etc/nginx/snippets/redirect_me.conf']
+  ],
+  notify  => Service['nginx'],
 }
 
 service { 'nginx':
-  ensure  => running,
-  enable  => true,
+  ensure => running,
+  enable => true,
   require => Package['nginx'],
 }
