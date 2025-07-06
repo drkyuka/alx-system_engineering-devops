@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Bash script that installs nginx on web-01 and sets a custom HTTP response header
+
+sudo su
+
+# clean up old nginx installation and install a fresh version
+service nginx status && service nginx stop 
+apt-get purge -y nginx nginx-common nginx-core
+apt-get update && apt-get upgrade -y
+apt-get install -y nginx nginx-common nginx-core --fix-missing
+apt-get autoremove -y && apt-get autoclean -y
+
+default_site="/etc/nginx/sites-enabled/default"
+base_dir="/var/www/html"
+
+if [ -f $default_site ]; then
+    cp "$default_site" "$default_site.bak"
+
+    # set default port for nginx
+    sed -i 's/listen\s*80;/listen 80 default_server;/g' $default_site
+    sed -i 's/listen\s*\[::\]:80;/listen [::]:80 default_server;/g' $default_site
+fi
+
+# set the index page
+if [ ! -d $base_dir ]; then
+    mkdir -p "$(base_dir)"
+fi
+
+if [ ! -f $base_dir/index.nginx-debian.html ]; then
+    touch -v $base_dir/index.nginx-debian.html
+fi
+
+# backup and change content of index file 
+cp -v "$base_dir/index.nginx-debian.html" "$base_dir/index.nginx-debian.html.bak"
+echo "Hello World!" >"$base_dir/index.nginx-debian.html"
+
+# add redirection of /redirect_me to a YouTube video
+if ! grep -q "location /redirect_me" $default_site; then
+    redirect_me_conf="\n\tlocation /redirect_me {\n\t\t return 301 https:\/\/www.youtube.com\/watch\?v=QH2-TGUlwu4;\n\t}\n"
+    sed -i "/server_name _;/i\\$redirect_me_conf" $default_site
+fi
+
+# add custom 404 page
+echo "Ceci n'est pas une page" >"$base_dir/custom_404.html"
+
+if ! grep -q "error_page 404 /custom_404.html" $default_site; then
+    custom_404="\n\terror_page 404 /custom_404.html;\n\tlocation = /custom_404.html {\n\t\troot \"$base_dir\";\n\t\tinternal;\n\t}\n"
+    sed -i "/server_name _;/i\\$custom_404" $default_site
+fi
+
+# add custom HTTP response header
+if ! grep -q "add_header X-Served-By" $default_site; then
+    header="\n\tadd_header X-Served-By $(hostname);\n"
+    sed -i "/server_name _;/i\\$header" $default_site
+fi
+
+# test if the nginx configuration is valid and reload it
+chmod -Rv 755 $base_dir
+
+if nginx -t && nginx -s reload; then
+    echo "Nginx configuration is valid."
+    service nginx restart
+else
+    echo "Nginx configuration is invalid. Please check the configuration files."
+fi
+
