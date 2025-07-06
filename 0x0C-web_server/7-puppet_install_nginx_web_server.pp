@@ -25,9 +25,9 @@ file {'/etc/nginx/snippets/redirect_me.conf':
   ensure  => file,
   content => @("EOF")
         location /redirect_me {
-            return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+            return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4/;
         }
-        
+
     | EOF
   require => Package['nginx'],
 }

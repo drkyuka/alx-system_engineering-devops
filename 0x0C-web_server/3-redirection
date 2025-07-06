@@ -18,16 +18,13 @@ cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.b
 
 tee /etc/nginx/snippets/redirect_me.conf > /dev/null <<EOF
     location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4/;
     }
 
 EOF
 
 sed -i '/^\s*server\s*{/r /etc/nginx/snippets/redirect_me.conf' /etc/nginx/sites-available/default
 echo "Hello World!" > /var/www/html/index.nginx-debian.html
-
-chown -vR "$USER":"$USER" /var/www/
-chown -vR "$USER":"$USER" /etc/nginx
 
 nginx -t && nginx -s reload
 service nginx restart
