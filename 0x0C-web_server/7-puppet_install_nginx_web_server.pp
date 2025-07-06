@@ -26,6 +26,11 @@ file {'/etc/nginx/snippets/redirect_me.conf':
   require => Package['nginx'],
 }
 
+exec {'insert_default_server_listen':
+  command => 'sed -i "s/listen\\s*80;/listen 80 default_server;/g" /etc/nginx/sites-available/default',
+  require => Package['nginx'],
+}
+
 exec {'insert_nginx_redirect_snippet':
   command => '/bin/sed -i "/^\\s*server\\s*{/r /etc/nginx/snippets/redirect_me.conf" /etc/nginx/sites-available/default',
   require => [
