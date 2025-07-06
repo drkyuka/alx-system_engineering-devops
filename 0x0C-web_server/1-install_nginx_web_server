@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 # Bash script that Install nginx on your web-01
 
-sudo su -
-apt-get update && apt-get install -y nginx --fix-missing
+sudo su
 # sudo service nginx stop
 ufw allow 22/tcp
 ufw allow 80/tcp
