@@ -3,6 +3,12 @@
 
 sudo su
 # sudo service nginx stop
+service nginx stop 
+apt-get update && apt-get upgrade
+apt-get install -y nginx --fix-missing
+apt-get install -y ufw
+apt-get autoremove -y && apt-get autoclean -y
+
 ufw allow 22/tcp
 ufw allow 80/tcp
 ufw --force enable

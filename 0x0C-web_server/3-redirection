@@ -3,7 +3,12 @@
 
 sudo su
 
-apt-get update && apt-get install -y nginx --fix-missing
+service nginx stop 
+apt-get update && apt-get upgrade
+apt-get install -y nginx --fix-missing
+apt-get install -y ufw
+apt-get autoremove -y && apt-get autoclean -y
+
 cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bak
 
