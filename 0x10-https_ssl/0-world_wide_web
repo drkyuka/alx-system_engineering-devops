@@ -1,0 +1,31 @@
+#!/bin/bash
+
+subdomains=("www" "lb-01" "web-01" "web-02")
+
+function print_domain_records() {
+    subdomain=$1
+    domain=$2
+    # echo "fqdn $subdomain.$domain"
+    
+    result=$(dig "$subdomain.$domain" | grep -A1 -i "answer section" | tail -n1)
+    echo "dig result: $result"
+
+    if [ "$result" ]; then
+        record=$(echo "$result" | awk '{print $4}')
+        ip=$(echo "$result" | awk '{print $5}')
+        echo "The subdomain $subdomain is a $record record and points to $ip"
+    fi
+}
+
+if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+    echo "Usage: $0 [domain] [subdomain]"
+elif [ "$#" -eq 1 ]; then
+    domain=$1
+    for subdomain in "${subdomains[@]}"; do
+        print_domain_records "$subdomain" "$domain"
+    done
+else
+    domain=$1
+    subdomain=$2
+    print_domain_records "$subdomain" "$domain"
+fi
