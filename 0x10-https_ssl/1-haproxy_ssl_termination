@@ -38,58 +38,66 @@ defaults
     errorfile 503 /etc/haproxy/errors/503.http
     errorfile 504 /etc/haproxy/errors/504.http
 
-frontend iq-http
+frontend 541704-http
     # Listen on port 80
-    bind \*:80
+    bind *:80
+    mode http
+    option forwardfor
+    acl is_certbot path_beg -i /.well-known/acme-challenge
+    redirect scheme https if !{ ssl_fc } !is_certbot
+    http-request redirect scheme https code 301 unless is_certbot
     # Listen on port 443
     # Uncomment after running certbot for the first time, a certificate
     # needs to be installed *before* HAProxy will be able to start when this
     # directive is not commented.
     #
-    bind \*:443 ssl crt /opt/certbot/haproxy_fullchains/__fallback.pem crt /opt/certbot/haproxy_fullchains
+    bind *:443 ssl crt /opt/certbot/haproxy_fullchains/__fallback.pem crt /opt/certbot/haproxy_fullchains
 
     # Forward Certbot verification requests to the certbot-haproxy plugin
     acl is_certbot path_beg -i /.well-known/acme-challenge
-    rspadd Strict-Transport-Security:\ max-age=31536000;\ includeSubDomains;\ preload
+    rspadd Strict-Transport-Security:\ max-age=31536000;\ includeSubDomains;\ preload if { ssl_fc }
     rspadd X-Frame-Options:\ DENY
-    use_backend certbot if is_certbot
+    use_backend 541704-certbot if is_certbot
     # The default backend is a cluster of 4 Apache servers that you need to
     # host.
-    default_backend nodes
+    default_backend 541704-web-servers
 
     # If you want to force a redirect from port 80 to 443, uncomment the next
     # line. Keep in mind that the bind \*:443 line should be uncommented and a
     # certificate should be present for all domains
-    mode http
-    option forwardfor
-    http-request redirect scheme https code 301 unless { ssl_fc }
-    http-request set-header X-Forwarded-Proto https
+    #mode http
+    #option forwardfor
+    #http-request redirect scheme https code 301 unless { ssl_fc }
+    # The following ACL matches all paths, so the X-ALX-Check header will be set for every request.
     acl contains_alx path /
-    http-request set-header X-ALX-Check ALX
-
-backend certbot
+    http-request set-header X-ALX-Check 'ALX for the win!'
+    
+backend 541704-certbot
     log global
     mode http
-    server certbot 127.0.0.1:8000
+    # Certbot verification server (consider making IP configurable for maintainability)
+    server 541704-lb-01 54.167.196.9:8000
 
     # You can also configure separate domains to force a redirect from port 80
     # to 443 like this:
     # redirect scheme https if !{ ssl_fc } and [PUT YOUR DOMAIN NAME HERE]
 
-backend nodes
+backend 541704-web-servers
     log global
     balance roundrobin
     option forwardfor
     option http-server-close
-    option httpclose
     http-request set-header X-Forwarded-Port %[dst_port]
     http-request add-header X-Forwarded-Proto https if { ssl_fc }
+    # redirect scheme https if !{ ssl_fc }
+
+    # Uncomment the next line to enable health checks
     option httpchk HEAD / HTTP/1.1\r\nHost:localhost
-    server 541704-web-01 13.219.86.37:8080 check
-    server 541704-web-02 44.201.120.67:8080 check
+    server web-01 13.219.86.37:80 check
+    server web-02 44.201.120.67:80 check
     # server node3 127.0.0.1:8080 check
     # server node4 127.0.0.1:8080 check
     # If redirection from port 80 to 443 is to be forced, uncomment the next
     # line. Keep in mind that the bind \*:443 line should be uncommented and a
     # certificate should be present for all domains
-    redirect scheme https if !{ ssl_fc }
+    
