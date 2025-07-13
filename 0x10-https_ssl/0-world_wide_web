@@ -6,9 +6,9 @@ function print_domain_records() {
     subdomain=$1
     domain=$2
     # echo "fqdn $subdomain.$domain"
-    
+
     result=$(dig "$subdomain.$domain" | grep -A1 -i "answer section" | tail -n1)
-    echo "dig result: $result"
+    # echo "dig result: $result"
 
     if [ "$result" ]; then
         record=$(echo "$result" | awk '{print $4}')
